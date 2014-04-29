@@ -2,18 +2,18 @@ package furflez.grapi;
 
 import java.util.ArrayList;
 
-public class Nodo {
+public class Node {
 	int x;
 	int y;
 	int id;
 	String name;
-	ArrayList<Nodo> neighbors = new ArrayList<Nodo>();
+	ArrayList<Node> neighbors = new ArrayList<Node>();
 	
-	public Nodo(){
+	public Node(){
 		
 	}
 	
-	public Nodo(int x, int y, int id, String name) {
+	public Node(int x, int y, int id, String name) {
 		super();
 		this.x = x;
 		this.y = y;
@@ -57,14 +57,14 @@ public class Nodo {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public ArrayList<Nodo> getNeighbors() {
+	public ArrayList<Node> getNeighbors() {
 		return neighbors;
 	}
-	public void setNeighbors(ArrayList<Nodo> neighbors) {
+	public void setNeighbors(ArrayList<Node> neighbors) {
 		this.neighbors = neighbors;
 	}
 	
-	public void addNeighbor(Nodo neighbor){
+	public void addNeighbor(Node neighbor){
 		
 		this.neighbors.add(neighbor);
 	}
