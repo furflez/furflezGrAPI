@@ -11,21 +11,21 @@ import javax.imageio.ImageIO;
 public class Main {
 
 	public static BufferedImage img = null;
-	public static ArrayList<Node> grafo;
+	public static ArrayList<Node> graph;
 
 	public static void main(String[] args) {
 		System.out.println();
 		img = GrAPI.generateNewImage(800, 800);
 		System.out.println("criando grafo...");
 
-		 grafo = GrAPI.generateGraph();
+		 graph = GrAPI.generateGraph();
 
 		// int[] posX = {50, 250, 250, 50};
 		// int[] posY = {50,50, 250,250};
 //		grafo = Utility.generateGraph("23il9k1mvqdwyc4gfxuhn7j5608oabszrtpe8!()");
 //		grafo = Utility.generateGraph("abcdefghijklmnopqrstuvwxyz");
 		
-		for (Node nodo : grafo) {
+		for (Node nodo : graph) {
 			System.out.println("Name: " + nodo.getName() + "\nX: "
 					+ nodo.getX() + "\nY: " + nodo.getY() + "\n " + " ");
 			
@@ -35,7 +35,7 @@ public class Main {
 //		ArrayList<Nodo> grafoAux = new ArrayList<Nodo>();
 //		grafoAux = Utility.associateNeighbors(grafo, 1);
 
-		GrAPI.drawConnectionLines(grafo);
+		GrAPI.drawConnectionLines(graph);
 
 		File outputfile = new File("image.png");
 		try {
