@@ -11,7 +11,7 @@ import javax.imageio.ImageIO;
 public class Main {
 
 	public static BufferedImage img = null;
-	public static ArrayList<Nodo> grafo;
+	public static ArrayList<Node> grafo;
 
 	public static void main(String[] args) {
 		System.out.println();
@@ -25,7 +25,7 @@ public class Main {
 //		grafo = Utility.generateGraph("23il9k1mvqdwyc4gfxuhn7j5608oabszrtpe8!()");
 //		grafo = Utility.generateGraph("abcdefghijklmnopqrstuvwxyz");
 		
-		for (Nodo nodo : grafo) {
+		for (Node nodo : grafo) {
 			System.out.println("Name: " + nodo.getName() + "\nX: "
 					+ nodo.getX() + "\nY: " + nodo.getY() + "\n " + " ");
 			

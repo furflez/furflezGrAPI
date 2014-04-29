@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class GrAPI {
-	private static ArrayList<Nodo> grafo;
+	private static ArrayList<Node> grafo;
 
 	public static int[] seedRefX = { 131, 494, 669, 442, 235, 486, 230, 665,
 			354, 668, 283, 79, 593, 623, 705, 335, 331, 221, 527, 503, 587,
@@ -36,9 +36,9 @@ public class GrAPI {
 	 * 
 	 * @return grafo completo em um arrayList
 	 */
-	public static ArrayList<Nodo> generateGraph() {
+	public static ArrayList<Node> generateGraph() {
 
-		grafo = new ArrayList<Nodo>();
+		grafo = new ArrayList<Node>();
 
 		System.out.println("gerando os nós...");
 		int randomNumber = 10;// (int) (Math.random() * 200) + 1;
@@ -47,7 +47,7 @@ public class GrAPI {
 
 		for (int i = 0; i < randomNumber; i++) {
 
-			Nodo nodo = new Nodo();
+			Node nodo = new Node();
 			nodo.setId(i);
 			nodo.setName("nodo_" + i);
 			int x = (int) (Math.random() * (Main.img.getWidth() - 80)) + 10;
@@ -70,9 +70,9 @@ public class GrAPI {
 	 *            posição vertical do nó
 	 * @return
 	 */
-	public static ArrayList<Nodo> generateGraph(int[] positionX, int[] positionY) {
+	public static ArrayList<Node> generateGraph(int[] positionX, int[] positionY) {
 
-		grafo = new ArrayList<Nodo>();
+		grafo = new ArrayList<Node>();
 
 		System.out.println("gerando os nós...");
 		int nodeNumbers = positionX.length;
@@ -81,7 +81,7 @@ public class GrAPI {
 
 		for (int i = 0; i < nodeNumbers; i++) {
 
-			Nodo nodo = new Nodo();
+			Node nodo = new Node();
 			nodo.setId(i);
 			nodo.setName("nodo_" + i);
 
@@ -93,10 +93,10 @@ public class GrAPI {
 		return grafo;
 	}
 
-	public static ArrayList<Nodo> generateGraph(String seed) {
+	public static ArrayList<Node> generateGraph(String seed) {
 
 		char[] seedChars = seed.toCharArray();
-		grafo = new ArrayList<Nodo>();
+		grafo = new ArrayList<Node>();
 
 		ArrayList<Character> cList = new ArrayList<Character>();
 		char[] cArray = seed.toCharArray();
@@ -119,7 +119,7 @@ public class GrAPI {
 
 		for (int i = 0; i < nodeNumbers; i++) {
 
-			Nodo nodo = new Nodo();
+			Node nodo = new Node();
 			nodo.setId(i);
 			nodo.setName(cList.get(i) + "");
 
@@ -142,7 +142,7 @@ public class GrAPI {
 	 */
 	private static int[] verifyPosition(int[] position) {
 		if (grafo.size() >= 1) {
-			for (Nodo nodo : grafo) {
+			for (Node nodo : grafo) {
 				if (!(nodo.getX() == position[0] && nodo.getY() == position[1])) {
 					break;
 				} else {
@@ -155,7 +155,7 @@ public class GrAPI {
 		return position;
 	}
 
-	public static void drawNodos(Nodo nodo) {
+	public static void drawNodos(Node nodo) {
 		for (int i = -5; i <= 5; i++) {
 			for (int j = -5; j <= 5; j++) {
 				try {
@@ -171,10 +171,10 @@ public class GrAPI {
 
 	}
 
-	public static ArrayList<Nodo> associateNeighbors(ArrayList<Nodo> grafo,
+	public static ArrayList<Node> associateNeighbors(ArrayList<Node> grafo,
 			String seed) {
 
-		for (Nodo nodo : grafo) {
+		for (Node nodo : grafo) {
 
 			connectToNear(grafo, nodo);
 			if (!(nodo.getId() + 1 > grafo.size() - 1)) {
@@ -186,8 +186,8 @@ public class GrAPI {
 		return grafo;
 	}
 
-	public static ArrayList<Nodo> associateNeighbors(ArrayList<Nodo> grafo) {
-		for (Nodo nodo : grafo) {
+	public static ArrayList<Node> associateNeighbors(ArrayList<Node> grafo) {
+		for (Node nodo : grafo) {
 			int randomNumber = (int) (Math.random() * Math
 					.round(grafo.size() / 2));
 			for (int i = 0; i < randomNumber; i++) {
@@ -204,7 +204,7 @@ public class GrAPI {
 				} while (nodo.getNeighbors().size() == 0);
 			}
 		}
-		for (Nodo nodo : grafo) {
+		for (Node nodo : grafo) {
 			while (nodo.getNeighbors() == null || nodo.getNeighbors().isEmpty()) {
 				int randomId = (int) (Math.random() * grafo.size());
 				if (!nodo.getNeighbors().contains(grafo.get(randomId))
@@ -218,10 +218,10 @@ public class GrAPI {
 		return grafo;
 	}
 
-	public static void drawConnectionLines(ArrayList<Nodo> n) {
+	public static void drawConnectionLines(ArrayList<Node> n) {
 
-		for (Nodo nodo : n) {
-			for (Nodo neighbor : nodo.getNeighbors()) {
+		for (Node nodo : n) {
+			for (Node neighbor : nodo.getNeighbors()) {
 				Graphics g = Main.img.createGraphics();
 				g.setFont(new Font("default", Font.BOLD, 16));
 
@@ -288,9 +288,9 @@ public class GrAPI {
 		return r;
 	}
 
-	public static Nodo connectToNear(ArrayList<Nodo> grafo, Nodo nodo) {
+	public static Node connectToNear(ArrayList<Node> grafo, Node nodo) {
 		int value = 500;
-		for (Nodo node : grafo) {
+		for (Node node : grafo) {
 			
 			if (node.getX() + value >= nodo.getX()
 					&& node.getX() - value <= nodo.getX()
@@ -306,7 +306,7 @@ public class GrAPI {
 				}
 			}
 		}
-		for (Nodo nodo2 : grafo) {
+		for (Node nodo2 : grafo) {
 			if (!nodo2.getNeighbors().isEmpty())
 
 				nodo2.getNeighbors().get(0).addNeighbor(nodo2);
