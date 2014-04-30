@@ -10,7 +10,7 @@ public class GrAPI {
 	private static ArrayList<Node> grafo;
 	private static BufferedImage img;
 
-	public static int[] seedRefX = { 131, 494, 669, 442, 235, 486, 230, 665,
+	private static int[] seedRefX = { 131, 494, 669, 442, 235, 486, 230, 665,
 			354, 668, 283, 79, 593, 623, 705, 335, 331, 221, 527, 503, 587,
 			339, 621, 138, 498, 663, 412, 363, 687, 517, 10, 441, 530, 405,
 			409, 439, 53, 693, 235, 208, 271, 598, 662, 71, 299, 688, 200, 346,
@@ -21,7 +21,7 @@ public class GrAPI {
 			492, 407, 473, 345, 681, 522, 679, 409, 33, 208, 599, 73, 29, 161,
 			484, 620, 502, 463, 628, 7, 7, 431, 403, 558, 140 };
 
-	public static int[] seedRefY = { 617, 652, 92, 191, 708, 720, 512, 433,
+	private static int[] seedRefY = { 617, 652, 92, 191, 708, 720, 512, 433,
 			613, 347, 395, 38, 175, 290, 385, 38, 622, 489, 32, 360, 453, 257,
 			12, 519, 418, 597, 134, 517, 509, 684, 355, 241, 198, 703, 561,
 			573, 135, 115, 111, 238, 418, 479, 645, 149, 61, 145, 447, 419,
@@ -360,7 +360,7 @@ public class GrAPI {
 	 */
 	public static void drawConnectionLines(ArrayList<Node> graph,
 			boolean drawName, boolean drawDistance) {
-		
+
 		if (drawName) {
 			for (Node node : graph) {
 				Graphics g = img.createGraphics();
