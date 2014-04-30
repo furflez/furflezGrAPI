@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 public class GrAPI {
 	private static ArrayList<Node> grafo;
+	private static BufferedImage img;
 
 	public static int[] seedRefX = { 131, 494, 669, 442, 235, 486, 230, 665,
 			354, 668, 283, 79, 593, 623, 705, 335, 331, 221, 527, 503, 587,
@@ -55,14 +56,14 @@ public class GrAPI {
 			int[] position = { x, y };
 			nodo.setPosition(verifyPosition(position));
 			grafo.add(nodo);
-
 		}
 
 		return GrAPI.associateNeighbors(grafo);
 	}
 
 	/**
-	 * Metodo que vai gerar o grafo com base nas posiçoes informadas de cada nó
+	 * Metodo que vai gerar o grafo com base nas posiçoes informadas de cada nó,
+	 * o numero de nós é definido pelo menor numero de posições obtidas
 	 * 
 	 * @param positionX
 	 *            posicão horizontal do nó
@@ -95,12 +96,11 @@ public class GrAPI {
 
 	public static ArrayList<Node> generateGraph(String seed) {
 
-		char[] seedChars = seed.toCharArray();
 		grafo = new ArrayList<Node>();
 
 		ArrayList<Character> cList = new ArrayList<Character>();
-		char[] cArray = seed.toCharArray();
-		for (char c : cArray) {
+		char[] seedChars = seed.toCharArray();
+		for (char c : seedChars) {
 			if (!cList.contains(c))
 				cList.add(c);
 		}
@@ -155,19 +155,20 @@ public class GrAPI {
 		return position;
 	}
 
-	public static void drawNodos(Node nodo) {
+	public static BufferedImage drawNodos(Node nodo, BufferedImage img) {
 		for (int i = -5; i <= 5; i++) {
 			for (int j = -5; j <= 5; j++) {
 				try {
-					Main.img.setRGB(nodo.getX() + i, nodo.getY() + j,
-							new Color(0, 0, 0).getRGB());
+					img.setRGB(nodo.getX() + i, nodo.getY() + j, new Color(0,
+							0, 0).getRGB());
 				} catch (Exception e) {
 					System.out.println("out");
 				}
 			}
 		}
-		
-		Main.img.setRGB(nodo.getX(), nodo.getY(), new Color(255, 0, 0).getRGB());
+
+		img.setRGB(nodo.getX(), nodo.getY(), new Color(255, 0, 0).getRGB());
+		return img;
 
 	}
 
@@ -188,8 +189,8 @@ public class GrAPI {
 
 	public static ArrayList<Node> associateNeighbors(ArrayList<Node> grafo) {
 		for (Node nodo : grafo) {
-			int randomNumber = (int) (Math.random() * Math
-					.round(grafo.size() / 2));
+			int randomNumber = 4; // (int) (Math.random() * Math
+			// .round(grafo.size() / 2));
 			for (int i = 0; i < randomNumber; i++) {
 				do {
 
@@ -218,39 +219,60 @@ public class GrAPI {
 		return grafo;
 	}
 
-	public static void drawConnectionLines(ArrayList<Node> n) {
+	/**
+	 * Método responsavel por desenhar as linhas e informações contidas no
+	 * grafo, tanto nome do nó quanto a distância de um nó ao outro
+	 * 
+	 * @param graph
+	 *            recebe o grafo completo num arrayList que é usado para
+	 *            verificar os nós contidos nele
+	 * @param drawName
+	 *            recebe um valor booleano que define se escreve ou não o nome
+	 *            do nó sobre ele
+	 * @param drawDistance
+	 *            recebe um valor booleano que define se escreve ou não a
+	 *            distância nas linhas
+	 */
+	public static void drawConnectionLines(ArrayList<Node> graph,
+			boolean drawName, boolean drawDistance) {
 
-		for (Node nodo : n) {
+		for (Node nodo : graph) {
 			for (Node neighbor : nodo.getNeighbors()) {
 				Graphics g = Main.img.createGraphics();
-				g.setFont(new Font("default", Font.BOLD, 16));
 
-				String str = nodo.getName() + ": " + nodo.getNeighbors().size();
-				g.setColor(Color.RED);
-				g.drawString(str, nodo.getX() - 5, nodo.getY() - 10);
+				if (drawName) {
+					g.setFont(new Font("default", Font.BOLD, 16));
+					String str = nodo.getName() + ": "
+							+ nodo.getNeighbors().size();
+					g.setColor(Color.RED);
+					g.drawString(str, nodo.getX() - 5, nodo.getY() - 10);
+				}
 
-				float base = nodo.getX() - neighbor.getX();
-				if (base < 0)
-					base = base * -1;
-
-				float altura = nodo.getY() - neighbor.getY();
-				if (altura < 0)
-					altura = altura * -1;
-
-				long distance = Math.round(Math.sqrt(Math.pow(base, 2)
-						+ Math.pow(altura, 2)));
-
-				int pointx = Math.round((nodo.getX() + neighbor.getX()) / 2);
-				int pointy = Math.round((nodo.getY() + neighbor.getY()) / 2);
-				// Color[] colors = {Color.RED, Color.GREEN, Color.BLUE,
-				// Color.DARK_GRAY, Color.MAGENTA, Color.ORANGE, Color.CYAN};
 				int red = (int) (Math.random() * 255);
 				int green = (int) (Math.random() * 255);
 				int blue = (int) (Math.random() * 255);
 				g.setColor(new Color(red, green, blue));
+				if (drawDistance) {
+					float base = nodo.getX() - neighbor.getX();
+					if (base < 0)
+						base = base * -1;
+
+					float altura = nodo.getY() - neighbor.getY();
+					if (altura < 0)
+						altura = altura * -1;
+
+					long distance = Math.round(Math.sqrt(Math.pow(base, 2)
+							+ Math.pow(altura, 2)));
+
+					int pointx = Math
+							.round((nodo.getX() + neighbor.getX()) / 2);
+					int pointy = Math
+							.round((nodo.getY() + neighbor.getY()) / 2);
+
+					g.drawString(distance + "", pointx, pointy);
+				}
 				g.drawLine(nodo.getX(), nodo.getY(), neighbor.getX(),
 						neighbor.getY());
-				g.drawString(distance + "", pointx, pointy);
 				g.dispose();
 
 			}
@@ -291,7 +313,7 @@ public class GrAPI {
 	public static Node connectToNear(ArrayList<Node> grafo, Node nodo) {
 		int value = 500;
 		for (Node node : grafo) {
-			
+
 			if (node.getX() + value >= nodo.getX()
 					&& node.getX() - value <= nodo.getX()
 					&& node.getY() + value >= nodo.getY()

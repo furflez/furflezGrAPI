@@ -14,14 +14,16 @@ public class Main {
 	public static ArrayList<Node> graph;
 
 	public static void main(String[] args) {
-		System.out.println();
+		
 		img = GrAPI.generateNewImage(800, 800);
 		System.out.println("criando grafo...");
 
-		 graph = GrAPI.generateGraph();
+//		 graph = GrAPI.generateGraph();
 
-		// int[] posX = {50, 250, 250, 50};
-		// int[] posY = {50,50, 250,250};
+		 int[] posX = {200, 200, 50, 300};
+		 int[] posY = {175,50, 200,250};
+		 graph = GrAPI.generateGraph(posX, posY);
+		 
 //		grafo = Utility.generateGraph("23il9k1mvqdwyc4gfxuhn7j5608oabszrtpe8!()");
 //		grafo = Utility.generateGraph("abcdefghijklmnopqrstuvwxyz");
 		
@@ -29,13 +31,12 @@ public class Main {
 			System.out.println("Name: " + nodo.getName() + "\nX: "
 					+ nodo.getX() + "\nY: " + nodo.getY() + "\n " + " ");
 			
-			GrAPI.drawNodos(nodo);
+			img = GrAPI.drawNodos(nodo,img);
 		}
 
 //		ArrayList<Nodo> grafoAux = new ArrayList<Nodo>();
-//		grafoAux = Utility.associateNeighbors(grafo, 1);
-
-		GrAPI.drawConnectionLines(graph);
+		GrAPI.associateNeighbors(graph);
+		GrAPI.drawConnectionLines(graph,false,false);
 
 		File outputfile = new File("image.png");
 		try {
