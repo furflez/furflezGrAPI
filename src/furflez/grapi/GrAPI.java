@@ -23,14 +23,14 @@ public class GrAPI {
 
 	public static int[] seedRefY = { 617, 652, 92, 191, 708, 720, 512, 433,
 			613, 347, 395, 38, 175, 290, 385, 38, 622, 489, 32, 360, 453, 257,
-			12, 519, 418, 597, 134, 517, 509, 684, 355, 241, 198, 703, 561, 573,
-			135, 115, 111, 238, 418, 479, 645, 149, 61, 145, 447, 419, 108,
-			256, 9, 27, 296, 144, 128, 349, 221, 103, 484, 335, 79, 280, 236,
-			348, 8, 414, 210, 103, 146, 254, 51, 222, 516, 533, 19, 312, 232,
-			24, 277, 357, 700, 687, 598, 480, 94, 362, 509, 711, 585, 479, 73,
-			600, 211, 523, 298, 610, 225, 326, 403, 296, 711, 586, 413, 298,
-			615, 158, 191, 168, 107, 358, 363, 311, 691, 679, 646, 411, 648,
-			589, 633, 690, 542, 443, 508, 637, 642, 191, 314, 76 };
+			12, 519, 418, 597, 134, 517, 509, 684, 355, 241, 198, 703, 561,
+			573, 135, 115, 111, 238, 418, 479, 645, 149, 61, 145, 447, 419,
+			108, 256, 9, 27, 296, 144, 128, 349, 221, 103, 484, 335, 79, 280,
+			236, 348, 8, 414, 210, 103, 146, 254, 51, 222, 516, 533, 19, 312,
+			232, 24, 277, 357, 700, 687, 598, 480, 94, 362, 509, 711, 585, 479,
+			73, 600, 211, 523, 298, 610, 225, 326, 403, 296, 711, 586, 413,
+			298, 615, 158, 191, 168, 107, 358, 363, 311, 691, 679, 646, 411,
+			648, 589, 633, 690, 542, 443, 508, 637, 642, 191, 314, 76 };
 
 	/**
 	 * método que gera o grafo aleatóriamente, tanto os nós com suas posições
@@ -171,7 +171,7 @@ public class GrAPI {
 	 *            nó a ser desenhado
 	 * @param img
 	 *            imagem que receberá o nó
-	 *            
+	 * 
 	 * @return imagem com o nó desenhado
 	 * 
 	 */
@@ -192,6 +192,16 @@ public class GrAPI {
 
 	}
 
+	/**
+	 * Método incompleto que se baseia em conectar os caracteres na sequencia
+	 * definida na seed. Necessita implementar o caso do caracter repetido usar
+	 * o mesmo nó e a partir desse nó conectar no seguinte.
+	 * 
+	 * @param grafo
+	 *            grafo sem as conexões
+	 * @param seed
+	 * @return retorna o grafo completo com as conexões definidas
+	 */
 	public static ArrayList<Node> associateNeighbors(ArrayList<Node> grafo,
 			String seed) {
 
@@ -207,13 +217,64 @@ public class GrAPI {
 		return grafo;
 	}
 
+	/**
+	 * Método que associa os nós com valor aleatório de conexões, o valor gerado
+	 * será o numero maximo de conexões que um nó pode ter. O valor é a metade
+	 * do numero de nós arredondado.
+	 * 
+	 * @param graph
+	 *            recebe o grafo sem as conexões
+	 * 
+	 * @return retorna o grafo completo com as conexões definidas
+	 */
 	public static ArrayList<Node> associateNeighbors(ArrayList<Node> graph) {
 		for (Node node : graph) {
-			int randomNumber = 4; // (int) (Math.random() * Math
-			// .round(grafo.size() / 2));
+			int randomNumber = (int) (Math.random() * Math
+					.round(grafo.size() / 2));
 			for (int i = 0; i < randomNumber; i++) {
 				do {
 
+					int randomId = (int) (Math.random() * graph.size());
+
+					if (!node.getNeighbors().contains(graph.get(randomId))
+							&& node.getId() != randomId) {
+						node.addNeighbor(graph.get(randomId));
+						graph.get(randomId).addNeighbor(node);
+
+					}
+				} while (node.getNeighbors().size() == 0);
+			}
+		}
+		for (Node node : graph) {
+			while (node.getNeighbors() == null || node.getNeighbors().isEmpty()) {
+				int randomId = (int) (Math.random() * graph.size());
+				if (!node.getNeighbors().contains(graph.get(randomId))
+						&& node.getId() != randomId) {
+					node.addNeighbor(graph.get(randomId));
+					graph.get(randomId).addNeighbor(node);
+
+				}
+			}
+		}
+		return graph;
+	}
+
+	/**
+	 * Método que associa os nós aleatóriamente com limite de conexões por nó.
+	 * 
+	 * @param graph
+	 *            recebe o grafo sem as conexões
+	 * @param maxNumberOfConnections
+	 *            limite de conexões por nó.
+	 * 
+	 * @return retorna o grafo completo com as conexões definidas
+	 * 
+	 */
+	public static ArrayList<Node> associateNeighbors(ArrayList<Node> graph,
+			int maxNumberOfConnections) {
+		for (Node node : graph) {
+			for (int i = 0; i < maxNumberOfConnections; i++) {
+				do {
 					int randomId = (int) (Math.random() * graph.size());
 
 					if (!node.getNeighbors().contains(graph.get(randomId))
@@ -300,6 +361,16 @@ public class GrAPI {
 
 	}
 
+	/**
+	 * Cria uma imagem vazia de fundo branco com altura e largura definidas por
+	 * parâmetro
+	 * 
+	 * @param width
+	 *            largura
+	 * @param height
+	 *            altura
+	 * @return imagem gerada branca
+	 */
 	public static BufferedImage generateNewImage(int width, int height) {
 		BufferedImage img = new BufferedImage(width, height,
 				BufferedImage.TYPE_INT_RGB);
@@ -312,6 +383,15 @@ public class GrAPI {
 		return img;
 	}
 
+	/**
+	 * Baseado na string passada como parâmetro, os arrays seedRefX e seedRefY
+	 * são consultados pelo valor inteiro de cada caracter da string, dessa
+	 * forma cada caracter possui uma posição unica para gerar um grafo
+	 * 
+	 * @param seed
+	 *            string utilizada para a criação do grafo
+	 * @return retorna o grafo completo com as conexões definidas
+	 */
 	public static int[][] generateSeed(String seed) {
 		ArrayList<Character> cList = new ArrayList<Character>();
 		char[] cArray = seed.toCharArray();
@@ -330,9 +410,17 @@ public class GrAPI {
 		return r;
 	}
 
-	public static Node connectToNear(ArrayList<Node> grafo, Node nodo) {
+	/**
+	 * Este metodo ainda não está funcionando como esperado, a ideia é detectar
+	 * e conectar o nó em um nó próximo a ele sem voltar ao nó anterior. (necessita de revisão)
+	 * 
+	 * @param graph grafo sem as conexões
+	 * @param nodo nó a encadear no próximo (a ideia era ser recursivo)
+	 * @return retorna o nó para caso da função ser recursiva
+	 */
+	public static Node connectToNear(ArrayList<Node> graph, Node nodo) {
 		int value = 500;
-		for (Node node : grafo) {
+		for (Node node : graph) {
 
 			if (node.getX() + value >= nodo.getX()
 					&& node.getX() - value <= nodo.getX()
@@ -348,7 +436,7 @@ public class GrAPI {
 				}
 			}
 		}
-		for (Node nodo2 : grafo) {
+		for (Node nodo2 : graph) {
 			if (!nodo2.getNeighbors().isEmpty())
 
 				nodo2.getNeighbors().get(0).addNeighbor(nodo2);
