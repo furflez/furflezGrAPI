@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 public class GrAPI {
 	private static ArrayList<Node> grafo;
+	private static BufferedImage img;
 
 	public static int[] seedRefX = { 131, 494, 669, 442, 235, 486, 230, 665,
 			354, 668, 283, 79, 593, 623, 705, 335, 331, 221, 527, 503, 587,
@@ -50,8 +51,8 @@ public class GrAPI {
 			Node node = new Node();
 			node.setId(i);
 			node.setName("nodo_" + i);
-			int x = (int) (Math.random() * (Main.img.getWidth() - 80)) + 10;
-			int y = (int) (Math.random() * (Main.img.getHeight() - 80)) + 10;
+			int x = (int) (Math.random() * (img.getWidth() - 80)) + 10;
+			int y = (int) (Math.random() * (img.getHeight() - 80)) + 10;
 			int[] position = { x, y };
 			node.setPosition(verifyPosition(position));
 			grafo.add(node);
@@ -154,8 +155,8 @@ public class GrAPI {
 				if (!(node.getX() == position[0] && node.getY() == position[1])) {
 					break;
 				} else {
-					position[0] = (int) (Math.random() * (Main.img.getWidth() - 80)) + 10;
-					position[1] = (int) (Math.random() * (Main.img.getHeight() - 80)) + 10;
+					position[0] = (int) (Math.random() * (img.getWidth() - 80)) + 10;
+					position[1] = (int) (Math.random() * (img.getHeight() - 80)) + 10;
 					verifyPosition(position);
 				}
 			}
@@ -257,7 +258,7 @@ public class GrAPI {
 
 		for (Node nodo : graph) {
 			for (Node neighbor : nodo.getNeighbors()) {
-				Graphics g = Main.img.createGraphics();
+				Graphics g = img.createGraphics();
 
 				if (drawName) {
 					g.setFont(new Font("default", Font.BOLD, 16));
@@ -307,7 +308,7 @@ public class GrAPI {
 				img.setRGB(x, y, Color.WHITE.getRGB());
 			}
 		}
-
+		GrAPI.img = img;
 		return img;
 	}
 
