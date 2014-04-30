@@ -360,29 +360,32 @@ public class GrAPI {
 	 */
 	public static void drawConnectionLines(ArrayList<Node> graph,
 			boolean drawName, boolean drawDistance) {
-
-		for (Node nodo : graph) {
-			for (Node neighbor : nodo.getNeighbors()) {
+		
+		if (drawName) {
+			for (Node node : graph) {
 				Graphics g = img.createGraphics();
+				g.setFont(new Font("default", Font.BOLD, 16));
+				String str = node.getName() + ": " + node.getNeighbors().size();
+				g.setColor(Color.RED);
+				g.drawString(str, node.getX() - 5, node.getY() - 10);
+				g.dispose();
+			}
+		}
 
-				if (drawName) {
-					g.setFont(new Font("default", Font.BOLD, 16));
-					String str = nodo.getName() + ": "
-							+ nodo.getNeighbors().size();
-					g.setColor(Color.RED);
-					g.drawString(str, nodo.getX() - 5, nodo.getY() - 10);
-				}
+		for (Node node : graph) {
+			for (Node neighbor : node.getNeighbors()) {
+				Graphics g = img.createGraphics();
 
 				int red = (int) (Math.random() * 255);
 				int green = (int) (Math.random() * 255);
 				int blue = (int) (Math.random() * 255);
 				g.setColor(new Color(red, green, blue));
 				if (drawDistance) {
-					float base = nodo.getX() - neighbor.getX();
+					float base = node.getX() - neighbor.getX();
 					if (base < 0)
 						base = base * -1;
 
-					float altura = nodo.getY() - neighbor.getY();
+					float altura = node.getY() - neighbor.getY();
 					if (altura < 0)
 						altura = altura * -1;
 
@@ -390,13 +393,13 @@ public class GrAPI {
 							+ Math.pow(altura, 2)));
 
 					int pointx = Math
-							.round((nodo.getX() + neighbor.getX()) / 2);
+							.round((node.getX() + neighbor.getX()) / 2);
 					int pointy = Math
-							.round((nodo.getY() + neighbor.getY()) / 2);
+							.round((node.getY() + neighbor.getY()) / 2);
 
 					g.drawString(distance + "", pointx, pointy);
 				}
-				g.drawLine(nodo.getX(), nodo.getY(), neighbor.getX(),
+				g.drawLine(node.getX(), node.getY(), neighbor.getX(),
 						neighbor.getY());
 				g.dispose();
 

@@ -35,8 +35,9 @@ public class Main {
 		}
 
 //		ArrayList<Nodo> grafoAux = new ArrayList<Nodo>();
-		GrAPI.associateNeighbors(graph);
-		GrAPI.drawConnectionLines(graph,false,false);
+		String[] strs = {"1-0","1<2","1>3"};
+		GrAPI.associateNeighbors(graph, strs);
+		GrAPI.drawConnectionLines(graph,true,false);
 
 		File outputfile = new File("image.png");
 		try {
