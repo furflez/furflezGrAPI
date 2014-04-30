@@ -301,6 +301,50 @@ public class GrAPI {
 	}
 
 	/**
+	 * Metodo que associa os nós manualmente com a seguinte sintaxe: "1-2" irá
+	 * criar uma conexão dupla entre o nó 1 e o 2, "1>2" irá criar uma conexão
+	 * apenas de ida do 1 para o 2, "1<2" conexão apenas do 2 para o 1
+	 * 
+	 * @param graph
+	 *            recebe o grafo sem as conexões
+	 * @param connections
+	 *            array informando na forma "x-y" , "x>y" ou "x<y", deve-se
+	 *            passar a id do nó para realizar a conexão
+	 * @return
+	 */
+	public static ArrayList<Node> associateNeighbors(ArrayList<Node> graph,
+			String[] connections) {
+
+		for (String string : connections) {
+			try {
+				if (string.contains("-")) {
+					String[] strs = string.split("-");
+
+					graph.get(Integer.parseInt(strs[0])).addNeighbor(
+							graph.get(Integer.parseInt(strs[1])));
+					graph.get(Integer.parseInt(strs[1])).addNeighbor(
+							graph.get(Integer.parseInt(strs[0])));
+				} else if (string.contains(">")) {
+					String[] strs = string.split(">");
+
+					graph.get(Integer.parseInt(strs[0])).addNeighbor(
+							graph.get(Integer.parseInt(strs[1])));
+				} else if (string.contains("<")) {
+					String[] strs = string.split("<");
+
+					graph.get(Integer.parseInt(strs[1])).addNeighbor(
+							graph.get(Integer.parseInt(strs[0])));
+				}
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+
+		}
+
+		return graph;
+	}
+
+	/**
 	 * Método responsavel por desenhar as linhas e informações contidas no
 	 * grafo, tanto nome do nó quanto a distância de um nó ao outro
 	 * 
@@ -412,10 +456,13 @@ public class GrAPI {
 
 	/**
 	 * Este metodo ainda não está funcionando como esperado, a ideia é detectar
-	 * e conectar o nó em um nó próximo a ele sem voltar ao nó anterior. (necessita de revisão)
+	 * e conectar o nó em um nó próximo a ele sem voltar ao nó anterior.
+	 * (necessita de revisão)
 	 * 
-	 * @param graph grafo sem as conexões
-	 * @param nodo nó a encadear no próximo (a ideia era ser recursivo)
+	 * @param graph
+	 *            grafo sem as conexões
+	 * @param nodo
+	 *            nó a encadear no próximo (a ideia era ser recursivo)
 	 * @return retorna o nó para caso da função ser recursiva
 	 */
 	public static Node connectToNear(ArrayList<Node> graph, Node nodo) {
