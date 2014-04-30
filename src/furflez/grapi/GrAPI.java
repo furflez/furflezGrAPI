@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 public class GrAPI {
 	private static ArrayList<Node> grafo;
-	private static BufferedImage img;
 
 	public static int[] seedRefX = { 131, 494, 669, 442, 235, 486, 230, 665,
 			354, 668, 283, 79, 593, 623, 705, 335, 331, 221, 527, 503, 587,
@@ -23,7 +22,7 @@ public class GrAPI {
 
 	public static int[] seedRefY = { 617, 652, 92, 191, 708, 720, 512, 433,
 			613, 347, 395, 38, 175, 290, 385, 38, 622, 489, 32, 360, 453, 257,
-			1, 519, 418, 597, 134, 517, 509, 684, 355, 241, 198, 703, 561, 573,
+			12, 519, 418, 597, 134, 517, 509, 684, 355, 241, 198, 703, 561, 573,
 			135, 115, 111, 238, 418, 479, 645, 149, 61, 145, 447, 419, 108,
 			256, 9, 27, 296, 144, 128, 349, 221, 103, 484, 335, 79, 280, 236,
 			348, 8, 414, 210, 103, 146, 254, 51, 222, 516, 533, 19, 312, 232,
@@ -48,14 +47,14 @@ public class GrAPI {
 
 		for (int i = 0; i < randomNumber; i++) {
 
-			Node nodo = new Node();
-			nodo.setId(i);
-			nodo.setName("nodo_" + i);
+			Node node = new Node();
+			node.setId(i);
+			node.setName("nodo_" + i);
 			int x = (int) (Math.random() * (Main.img.getWidth() - 80)) + 10;
 			int y = (int) (Math.random() * (Main.img.getHeight() - 80)) + 10;
 			int[] position = { x, y };
-			nodo.setPosition(verifyPosition(position));
-			grafo.add(nodo);
+			node.setPosition(verifyPosition(position));
+			grafo.add(node);
 		}
 
 		return GrAPI.associateNeighbors(grafo);
@@ -94,6 +93,15 @@ public class GrAPI {
 		return grafo;
 	}
 
+	/**
+	 * Método que gera um grafo a partir de uma string, caracteres repetidos
+	 * serão ignorados, o posicionamento dos nós do grafo é definido pelo valor
+	 * inteiro do caracter nos arrays seedRefX e seedRefY.
+	 * 
+	 * @param seed
+	 *            string que será utilizada para gerar um grafo
+	 * @return retorna o grafo completo baseado na seed informada
+	 */
 	public static ArrayList<Node> generateGraph(String seed) {
 
 		grafo = new ArrayList<Node>();
@@ -133,8 +141,8 @@ public class GrAPI {
 	}
 
 	/**
-	 * método exclusivo da classe Utility que verifica as posições informadas
-	 * para não ter conflitos e não permitir que dois nós sejam criados na mesma
+	 * método exclusivo da classe GrAPI que verifica as posições informadas para
+	 * não ter conflitos e não permitir que dois nós sejam criados na mesma
 	 * posição
 	 * 
 	 * @param position
@@ -142,8 +150,8 @@ public class GrAPI {
 	 */
 	private static int[] verifyPosition(int[] position) {
 		if (grafo.size() >= 1) {
-			for (Node nodo : grafo) {
-				if (!(nodo.getX() == position[0] && nodo.getY() == position[1])) {
+			for (Node node : grafo) {
+				if (!(node.getX() == position[0] && node.getY() == position[1])) {
 					break;
 				} else {
 					position[0] = (int) (Math.random() * (Main.img.getWidth() - 80)) + 10;
@@ -155,11 +163,22 @@ public class GrAPI {
 		return position;
 	}
 
-	public static BufferedImage drawNodos(Node nodo, BufferedImage img) {
+	/**
+	 * Método responsável por desenhar os nós do grafo em uma imagem.
+	 * 
+	 * @param node
+	 *            nó a ser desenhado
+	 * @param img
+	 *            imagem que receberá o nó
+	 *            
+	 * @return imagem com o nó desenhado
+	 * 
+	 */
+	public static BufferedImage drawNodos(Node node, BufferedImage img) {
 		for (int i = -5; i <= 5; i++) {
 			for (int j = -5; j <= 5; j++) {
 				try {
-					img.setRGB(nodo.getX() + i, nodo.getY() + j, new Color(0,
+					img.setRGB(node.getX() + i, node.getY() + j, new Color(0,
 							0, 0).getRGB());
 				} catch (Exception e) {
 					System.out.println("out");
@@ -167,7 +186,7 @@ public class GrAPI {
 			}
 		}
 
-		img.setRGB(nodo.getX(), nodo.getY(), new Color(255, 0, 0).getRGB());
+		img.setRGB(node.getX(), node.getY(), new Color(255, 0, 0).getRGB());
 		return img;
 
 	}
@@ -175,10 +194,10 @@ public class GrAPI {
 	public static ArrayList<Node> associateNeighbors(ArrayList<Node> grafo,
 			String seed) {
 
-		for (Node nodo : grafo) {
+		for (Node node : grafo) {
 
-			connectToNear(grafo, nodo);
-			if (!(nodo.getId() + 1 > grafo.size() - 1)) {
+			connectToNear(grafo, node);
+			if (!(node.getId() + 1 > grafo.size() - 1)) {
 				// nodo.addNeighbor(grafo.get(nodo.getId() + 1));
 				// grafo.get(nodo.getId() + 1).addNeighbor(nodo);
 			}
@@ -187,36 +206,36 @@ public class GrAPI {
 		return grafo;
 	}
 
-	public static ArrayList<Node> associateNeighbors(ArrayList<Node> grafo) {
-		for (Node nodo : grafo) {
+	public static ArrayList<Node> associateNeighbors(ArrayList<Node> graph) {
+		for (Node node : graph) {
 			int randomNumber = 4; // (int) (Math.random() * Math
 			// .round(grafo.size() / 2));
 			for (int i = 0; i < randomNumber; i++) {
 				do {
 
-					int randomId = (int) (Math.random() * grafo.size());
+					int randomId = (int) (Math.random() * graph.size());
 
-					if (!nodo.getNeighbors().contains(grafo.get(randomId))
-							&& nodo.getId() != randomId) {
-						nodo.addNeighbor(grafo.get(randomId));
-						grafo.get(randomId).addNeighbor(nodo);
+					if (!node.getNeighbors().contains(graph.get(randomId))
+							&& node.getId() != randomId) {
+						node.addNeighbor(graph.get(randomId));
+						graph.get(randomId).addNeighbor(node);
 
 					}
-				} while (nodo.getNeighbors().size() == 0);
+				} while (node.getNeighbors().size() == 0);
 			}
 		}
-		for (Node nodo : grafo) {
-			while (nodo.getNeighbors() == null || nodo.getNeighbors().isEmpty()) {
-				int randomId = (int) (Math.random() * grafo.size());
-				if (!nodo.getNeighbors().contains(grafo.get(randomId))
-						&& nodo.getId() != randomId) {
-					nodo.addNeighbor(grafo.get(randomId));
-					grafo.get(randomId).addNeighbor(nodo);
+		for (Node node : graph) {
+			while (node.getNeighbors() == null || node.getNeighbors().isEmpty()) {
+				int randomId = (int) (Math.random() * graph.size());
+				if (!node.getNeighbors().contains(graph.get(randomId))
+						&& node.getId() != randomId) {
+					node.addNeighbor(graph.get(randomId));
+					graph.get(randomId).addNeighbor(node);
 
 				}
 			}
 		}
-		return grafo;
+		return graph;
 	}
 
 	/**
