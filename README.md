@@ -1,2 +1,1 @@
-###FurflezGrAPI
-[Logo](http://i.imgur.com/5rBCpJB.png)
+![Logo](http://i.imgur.com/5rBCpJB.png)
