@@ -13,14 +13,6 @@ public class Node {
 		
 	}
 	
-	public Node(int x, int y, int id, String name) {
-		super();
-		this.x = x;
-		this.y = y;
-		this.id = id;
-		this.name = name;
-	}
-	
 	public int getX() {
 		return x;
 	}
