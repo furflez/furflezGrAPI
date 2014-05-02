@@ -3,8 +3,11 @@ package furflez.grapi;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class GrAPI {
 	private static ArrayList<Node> grafo;
@@ -42,7 +45,7 @@ public class GrAPI {
 		grafo = new ArrayList<Node>();
 
 		System.out.println("gerando os nós...");
-		int randomNumber = 10;// (int) (Math.random() * 200) + 1;
+		int randomNumber = 12;// (int) (Math.random() * 200) + 1;
 
 		System.out.println("numero de nós: " + randomNumber);
 
@@ -155,8 +158,10 @@ public class GrAPI {
 				if (!(node.getX() == position[0] && node.getY() == position[1])) {
 					break;
 				} else {
+
 					position[0] = (int) (Math.random() * (img.getWidth() - 80)) + 10;
 					position[1] = (int) (Math.random() * (img.getHeight() - 80)) + 10;
+
 					verifyPosition(position);
 				}
 			}
@@ -365,7 +370,7 @@ public class GrAPI {
 			for (Node node : graph) {
 				Graphics g = img.createGraphics();
 				g.setFont(new Font("default", Font.BOLD, 16));
-				String str = node.getName() + ": " + node.getNeighbors().size();
+				String str = node.getName();//+ ": " + node.getNeighbors().size();
 				g.setColor(Color.RED);
 				g.drawString(str, node.getX() - 5, node.getY() - 10);
 				g.dispose();
@@ -379,33 +384,49 @@ public class GrAPI {
 				int red = (int) (Math.random() * 255);
 				int green = (int) (Math.random() * 255);
 				int blue = (int) (Math.random() * 255);
-				g.setColor(new Color(red, green, blue));
-				if (drawDistance) {
-					float base = node.getX() - neighbor.getX();
-					if (base < 0)
-						base = base * -1;
+				Color color = new Color(red, green, blue);
 
-					float altura = node.getY() - neighbor.getY();
-					if (altura < 0)
-						altura = altura * -1;
+				g.setColor(color);
 
-					long distance = Math.round(Math.sqrt(Math.pow(base, 2)
-							+ Math.pow(altura, 2)));
+				{
+					if (drawDistance) {
 
-					int pointx = Math
-							.round((node.getX() + neighbor.getX()) / 2);
-					int pointy = Math
-							.round((node.getY() + neighbor.getY()) / 2);
+						int pointx = Math
+								.round((node.getX() + neighbor.getX()) / 2);
+						int pointy = Math
+								.round((node.getY() + neighbor.getY()) / 2);
 
-					g.drawString(distance + "", pointx, pointy);
+						g.drawString(calculateDistance(node, neighbor) + "", pointx, pointy);
+					}
+
+//					drawArrow(g, node.getX(), node.getY(), neighbor.getX(),
+//							neighbor.getY());
+					 g.drawLine(node.getX(), node.getY(), neighbor.getX(),
+					 neighbor.getY());
+					g.dispose();
+
 				}
-				g.drawLine(node.getX(), node.getY(), neighbor.getX(),
-						neighbor.getY());
-				g.dispose();
-
 			}
 		}
 
+	}
+
+	private static final int ARR_SIZE = 6;
+
+	private static void drawArrow(Graphics g1, int x1, int y1, int x2, int y2) {
+		Graphics2D g = (Graphics2D) g1.create();
+
+		double dx = (x2 - 5) - x1, dy = (y2 - 5) - y1;
+		double angle = Math.atan2(dy, dx);
+		int len = (int) Math.sqrt(dx * dx + dy * dy);
+		AffineTransform at = AffineTransform.getTranslateInstance(x1, y1);
+		at.concatenate(AffineTransform.getRotateInstance(angle));
+		g.transform(at);
+
+		// Draw horizontal arrow starting in (0, 0)
+		g.drawLine(0, 0, len, 0);
+		g.fillPolygon(new int[] { len, len - ARR_SIZE, len - ARR_SIZE, len },
+				new int[] { 0, -ARR_SIZE, ARR_SIZE, 0 }, 4);
 	}
 
 	/**
@@ -462,6 +483,9 @@ public class GrAPI {
 	 * e conectar o nó em um nó próximo a ele sem voltar ao nó anterior.
 	 * (necessita de revisão)
 	 * 
+	 * 02/05/2014 - commentado todas as linhas e criado um novo método auxiliar
+	 * recursivo.
+	 * 
 	 * @param graph
 	 *            grafo sem as conexões
 	 * @param nodo
@@ -469,35 +493,58 @@ public class GrAPI {
 	 * @return retorna o nó para caso da função ser recursiva
 	 */
 	public static Node connectToNear(ArrayList<Node> graph, Node nodo) {
-//		int value = 500;
-//		for (Node node : graph) {
-//
-//			if (node.getX() + value >= nodo.getX()
-//					&& node.getX() - value <= nodo.getX()
-//					&& node.getY() + value >= nodo.getY()
-//					&& node.getY() - value <= nodo.getY()) {
-//				if (node.getNeighbors().size() <= 1
-//						&& nodo.getNeighbors().size() <= 1
-//						&& node.getId() != nodo.getId()) {
-//					if (!node.getNeighbors().contains(nodo)) {
-//						nodo.addNeighbor(node);
-//						node.addNeighbor(nodo);
-//					}
-//				}
-//			}
-//		}
-//		for (Node nodo2 : graph) {
-//			if (!nodo2.getNeighbors().isEmpty())
-//
-//				nodo2.getNeighbors().get(0).addNeighbor(nodo2);
-//		}
-//
+		// int value = 500;
+		// for (Node node : graph) {
+		//
+		// if (node.getX() + value >= nodo.getX()
+		// && node.getX() - value <= nodo.getX()
+		// && node.getY() + value >= nodo.getY()
+		// && node.getY() - value <= nodo.getY()) {
+		// if (node.getNeighbors().size() <= 1
+		// && nodo.getNeighbors().size() <= 1
+		// && node.getId() != nodo.getId()) {
+		// if (!node.getNeighbors().contains(nodo)) {
+		// nodo.addNeighbor(node);
+		// node.addNeighbor(nodo);
+		// }
+		// }
+		// }
+		// }
+		// for (Node nodo2 : graph) {
+		// if (!nodo2.getNeighbors().isEmpty())
+		//
+		// nodo2.getNeighbors().get(0).addNeighbor(nodo2);
+		// }
+		//
 		connect(nodo);
 		return nodo;
 	}
-	
-	private static Node connect(Node node){
+
+	private static Node connect(Node node) {
 		return node;
+	}
+	
+	public static long calculateDistance(Node node, Node neighbor){
+		float base = node.getX() - neighbor.getX();
+		if (base < 0)
+			base = base * -1;
+
+		float altura = node.getY() - neighbor.getY();
+		if (altura < 0)
+			altura = altura * -1;
+
+		long distance = Math.round(Math.sqrt(Math.pow(base, 2)
+				+ Math.pow(altura, 2)));
+
+		return distance;
+	}
+	
+	public static void writeTextFile(ArrayList<Node> graph){
+		for (Node node : graph) {
+			for (Node neighbor : node.getNeighbors()) {
+				System.out.println(":"+node.getId()+":"+neighbor.getId()+"!"+calculateDistance(node, neighbor));	
+			}
+		}
 	}
 
 }
