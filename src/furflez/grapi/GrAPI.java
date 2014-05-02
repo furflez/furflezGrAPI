@@ -469,30 +469,35 @@ public class GrAPI {
 	 * @return retorna o nó para caso da função ser recursiva
 	 */
 	public static Node connectToNear(ArrayList<Node> graph, Node nodo) {
-		int value = 500;
-		for (Node node : graph) {
-
-			if (node.getX() + value >= nodo.getX()
-					&& node.getX() - value <= nodo.getX()
-					&& node.getY() + value >= nodo.getY()
-					&& node.getY() - value <= nodo.getY()) {
-				if (node.getNeighbors().size() <= 1
-						&& nodo.getNeighbors().size() <= 1
-						&& node.getId() != nodo.getId()) {
-					if (!node.getNeighbors().contains(nodo)) {
-						nodo.addNeighbor(node);
-						node.addNeighbor(nodo);
-					}
-				}
-			}
-		}
-		for (Node nodo2 : graph) {
-			if (!nodo2.getNeighbors().isEmpty())
-
-				nodo2.getNeighbors().get(0).addNeighbor(nodo2);
-		}
-
+//		int value = 500;
+//		for (Node node : graph) {
+//
+//			if (node.getX() + value >= nodo.getX()
+//					&& node.getX() - value <= nodo.getX()
+//					&& node.getY() + value >= nodo.getY()
+//					&& node.getY() - value <= nodo.getY()) {
+//				if (node.getNeighbors().size() <= 1
+//						&& nodo.getNeighbors().size() <= 1
+//						&& node.getId() != nodo.getId()) {
+//					if (!node.getNeighbors().contains(nodo)) {
+//						nodo.addNeighbor(node);
+//						node.addNeighbor(nodo);
+//					}
+//				}
+//			}
+//		}
+//		for (Node nodo2 : graph) {
+//			if (!nodo2.getNeighbors().isEmpty())
+//
+//				nodo2.getNeighbors().get(0).addNeighbor(nodo2);
+//		}
+//
+		connect(nodo);
 		return nodo;
+	}
+	
+	private static Node connect(Node node){
+		return node;
 	}
 
 }
