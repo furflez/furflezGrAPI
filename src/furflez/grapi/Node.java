@@ -3,10 +3,10 @@ package furflez.grapi;
 import java.util.ArrayList;
 
 public class Node {
-	int x;
-	int y;
-	int id;
-	String name;
+	private int x;
+	private int y;
+	private int id;
+	private String name;
 	ArrayList<Node> neighbors = new ArrayList<Node>();
 	
 	public Node(){

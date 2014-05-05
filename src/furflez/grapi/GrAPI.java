@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class GrAPI {
-	private static ArrayList<Node> grafo;
+	private static ArrayList<Node> graph;
 	private static BufferedImage img;
 
 	private static int[] seedRefX = { 131, 494, 669, 442, 235, 486, 230, 665,
@@ -42,7 +42,7 @@ public class GrAPI {
 	 */
 	public static ArrayList<Node> generateGraph() {
 
-		grafo = new ArrayList<Node>();
+		graph = new ArrayList<Node>();
 
 		System.out.println("gerando os nós...");
 		int randomNumber = 12;// (int) (Math.random() * 200) + 1;
@@ -58,10 +58,10 @@ public class GrAPI {
 			int y = (int) (Math.random() * (img.getHeight() - 80)) + 10;
 			int[] position = { x, y };
 			node.setPosition(verifyPosition(position));
-			grafo.add(node);
+			graph.add(node);
 		}
 
-		return GrAPI.associateNeighbors(grafo);
+		return graph;
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class GrAPI {
 	 */
 	public static ArrayList<Node> generateGraph(int[] positionX, int[] positionY) {
 
-		grafo = new ArrayList<Node>();
+		graph = new ArrayList<Node>();
 
 		System.out.println("gerando os nós...");
 		int nodeNumbers = positionX.length;
@@ -91,10 +91,10 @@ public class GrAPI {
 
 			int[] position = { positionX[i], positionY[i] };
 			nodo.setPosition(position);
-			grafo.add(nodo);
+			graph.add(nodo);
 
 		}
-		return grafo;
+		return graph;
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class GrAPI {
 	 */
 	public static ArrayList<Node> generateGraph(String seed) {
 
-		grafo = new ArrayList<Node>();
+		graph = new ArrayList<Node>();
 
 		ArrayList<Character> cList = new ArrayList<Character>();
 		char[] seedChars = seed.toCharArray();
@@ -137,11 +137,11 @@ public class GrAPI {
 
 			int[] position = { positionX[i], positionY[i] };
 			nodo.setPosition(position);
-			grafo.add(nodo);
+			graph.add(nodo);
 
 		}
-		associateNeighbors(grafo, seed);
-		return grafo;
+		associateNeighbors(graph, seed);
+		return graph;
 	}
 
 	/**
@@ -153,8 +153,8 @@ public class GrAPI {
 	 *            recebe um array com duas posições, x e y
 	 */
 	private static int[] verifyPosition(int[] position) {
-		if (grafo.size() >= 1) {
-			for (Node node : grafo) {
+		if (graph.size() >= 1) {
+			for (Node node : graph) {
 				if (!(node.getX() == position[0] && node.getY() == position[1])) {
 					break;
 				} else {
@@ -235,7 +235,7 @@ public class GrAPI {
 	public static ArrayList<Node> associateNeighbors(ArrayList<Node> graph) {
 		for (Node node : graph) {
 			int randomNumber = (int) (Math.random() * Math
-					.round(grafo.size() / 2));
+					.round(graph.size() / 2));
 			for (int i = 0; i < randomNumber; i++) {
 				do {
 
@@ -257,7 +257,6 @@ public class GrAPI {
 						&& node.getId() != randomId) {
 					node.addNeighbor(graph.get(randomId));
 					graph.get(randomId).addNeighbor(node);
-
 				}
 			}
 		}
@@ -277,17 +276,22 @@ public class GrAPI {
 	 */
 	public static ArrayList<Node> associateNeighbors(ArrayList<Node> graph,
 			int maxNumberOfConnections) {
+//		maxNumberOfConnections++;
 		for (Node node : graph) {
+			
 			for (int i = 0; i < maxNumberOfConnections; i++) {
 				do {
 					int randomId = (int) (Math.random() * graph.size());
 
-					if (!node.getNeighbors().contains(graph.get(randomId))
-							&& node.getId() != randomId) {
-						node.addNeighbor(graph.get(randomId));
-						graph.get(randomId).addNeighbor(node);
+					if (node.getNeighbors().size() <= maxNumberOfConnections
+							&& graph.get(randomId).getNeighbors()
+									.size() <= maxNumberOfConnections)
+						if (!node.getNeighbors().contains(node)
+								&& node.getId() != randomId) {
+							node.addNeighbor(graph.get(randomId));
+							graph.get(randomId).addNeighbor(node);
 
-					}
+						}
 				} while (node.getNeighbors().size() == 0);
 			}
 		}
@@ -366,21 +370,11 @@ public class GrAPI {
 	public static void drawConnectionLines(ArrayList<Node> graph,
 			boolean drawName, boolean drawDistance) {
 
-		if (drawName) {
-			for (Node node : graph) {
-				Graphics g = img.createGraphics();
-				g.setFont(new Font("default", Font.BOLD, 16));
-				String str = node.getName();//+ ": " + node.getNeighbors().size();
-				g.setColor(Color.RED);
-				g.drawString(str, node.getX() - 5, node.getY() - 10);
-				g.dispose();
-			}
-		}
-
 		for (Node node : graph) {
 			for (Node neighbor : node.getNeighbors()) {
 				Graphics g = img.createGraphics();
 
+				g.setFont(new Font("default", Font.BOLD, 16));
 				int red = (int) (Math.random() * 255);
 				int green = (int) (Math.random() * 255);
 				int blue = (int) (Math.random() * 255);
@@ -396,16 +390,28 @@ public class GrAPI {
 						int pointy = Math
 								.round((node.getY() + neighbor.getY()) / 2);
 
-						g.drawString(calculateDistance(node, neighbor) + "", pointx, pointy);
+						g.drawString(calculateDistance(node, neighbor) + "",
+								pointx, pointy);
 					}
 
-//					drawArrow(g, node.getX(), node.getY(), neighbor.getX(),
-//							neighbor.getY());
-					 g.drawLine(node.getX(), node.getY(), neighbor.getX(),
-					 neighbor.getY());
+					// drawArrow(g, node.getX(), node.getY(), neighbor.getX(),
+					// neighbor.getY());
+					g.drawLine(node.getX(), node.getY(), neighbor.getX(),
+							neighbor.getY());
 					g.dispose();
 
 				}
+			}
+		}
+		if (drawName) {
+			for (Node node : graph) {
+				Graphics g = img.createGraphics();
+				g.setFont(new Font("default", Font.BOLD, 16));
+				String str = node.getId() + "-" + node.getName();// + ": " +
+				// node.getNeighbors().size();
+				g.setColor(Color.RED);
+				g.drawString(str, node.getX() - 5, node.getY() - 10);
+				g.dispose();
 			}
 		}
 
@@ -523,8 +529,8 @@ public class GrAPI {
 	private static Node connect(Node node) {
 		return node;
 	}
-	
-	public static long calculateDistance(Node node, Node neighbor){
+
+	public static long calculateDistance(Node node, Node neighbor) {
 		float base = node.getX() - neighbor.getX();
 		if (base < 0)
 			base = base * -1;
@@ -538,12 +544,17 @@ public class GrAPI {
 
 		return distance;
 	}
-	
-	public static void writeTextFile(ArrayList<Node> graph){
+
+	public static void writeTextFile(ArrayList<Node> graph) {
 		for (Node node : graph) {
 			for (Node neighbor : node.getNeighbors()) {
-				System.out.println(":"+node.getId()+":"+neighbor.getId()+"!"+calculateDistance(node, neighbor));	
+				System.out.println(":" + node.getId() + ":" + neighbor.getId()
+						+ "!" + calculateDistance(node, neighbor));
 			}
+		}
+		for (Node node : graph) {
+			System.out.println("//Id:"+ node.getId() +" - " + node.getName() + " x: " + node.getX()
+					+ ", y: " + node.getY());
 		}
 	}
 
