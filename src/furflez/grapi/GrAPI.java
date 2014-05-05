@@ -276,16 +276,15 @@ public class GrAPI {
 	 */
 	public static ArrayList<Node> associateNeighbors(ArrayList<Node> graph,
 			int maxNumberOfConnections) {
-//		maxNumberOfConnections++;
+		// maxNumberOfConnections++;
 		for (Node node : graph) {
-			
+
 			for (int i = 0; i < maxNumberOfConnections; i++) {
 				do {
 					int randomId = (int) (Math.random() * graph.size());
 
 					if (node.getNeighbors().size() <= maxNumberOfConnections
-							&& graph.get(randomId).getNeighbors()
-									.size() <= maxNumberOfConnections)
+							&& graph.get(randomId).getNeighbors().size() <= maxNumberOfConnections)
 						if (!node.getNeighbors().contains(node)
 								&& node.getId() != randomId) {
 							node.addNeighbor(graph.get(randomId));
@@ -553,8 +552,8 @@ public class GrAPI {
 			}
 		}
 		for (Node node : graph) {
-			System.out.println("//Id:"+ node.getId() +" - " + node.getName() + " x: " + node.getX()
-					+ ", y: " + node.getY());
+			System.out.println("//Id:" + node.getId() + " - " + node.getName()
+					+ " x: " + node.getX() + ", y: " + node.getY());
 		}
 	}
 
